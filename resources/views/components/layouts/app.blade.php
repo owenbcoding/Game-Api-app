@@ -3,8 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=
-    , initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Game-App</title>
     <link rel="shortcut icon" href="{{ Vite::asset('resources/img/favicon.png') }}">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
