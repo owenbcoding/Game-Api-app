@@ -1,5 +1,9 @@
+@props([
+    // Expected shape: ['slug' => string, 'coverImageUrl' => string, 'rating' => string|int, 'name' => string, 'platforms' => string]
+    'game' => [],
+])
+
 <div>
-    <!-- Simplicity is the consequence of refined emotions. - Jean D'Alembert -->
     <div class="game mt-8">
         <div class="relative inline-block">
             <a href="{{ route('games.show', $game['slug'] ?? '') }}">
