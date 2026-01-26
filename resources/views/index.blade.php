@@ -14,7 +14,7 @@
                 <livewire:most-anticipated />
 
                 <h2 class="text-blue-500 uppercase tracking-wide font-semibold mt-8">Coming Soon</h2>
-                <livewire:comming-soon />
+                <livewire:coming-soon />
             </div>
         </div>
     </div>

@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 
-class CommingSoon extends Component
+class ComingSoon extends Component
 {
     public $comingSoon = [];
 
@@ -52,7 +52,7 @@ class CommingSoon extends Component
 
     public function render()
     {
-        return view('livewire.comming-soon');
+        return view('livewire.coming-soon');
     }
 
     public function formatForView($games)
@@ -61,6 +61,7 @@ class CommingSoon extends Component
             return collect($game)->merge([
                 'coverImageUrl' => Str::replace('thumb', 'cover_big', $game['cover']['url'] ?? ''),
                 'releaseDate' => Carbon::parse($game['first_release_date'])->format('M d, Y'),
+                'platforms' => collect($game['platforms'] ?? [])->pluck('abbreviation')->implode(', '),
             ]);
         })->toArray();
     }
