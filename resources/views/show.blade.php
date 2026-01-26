@@ -131,7 +131,17 @@
             </div>
         </div>
         <!-- end images-container -->
-            <x-game-card-small :similarGames="$similarGames" />
+        <div class="similar-games-container border-b border-gray-800 pb-12 mt-8">
+            <h2 class="text-blue-500 uppercase tracking-wide font-semibold">Similar Games</h2>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-12 mt-8">
+                @forelse ($similarGames as $game)
+                    <x-game-card-small :game="$game" />
+                @empty
+                    <p class="text-gray-400 col-span-full">No similar games found.</p>
+                @endforelse
+            </div>
+        </div>
         <!-- end similar-games -->
     </div>
 </x-layouts.app>
