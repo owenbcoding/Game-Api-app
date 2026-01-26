@@ -66,6 +66,7 @@ class MostAnticipated extends Component
             return collect($game)->merge([
                 'coverImageUrl' => Str::replace('thumb', 'cover_big', $game['cover']['url'] ?? ''),
                 'releaseDate' => Carbon::parse($game['first_release_date'])->format('M d, Y'),
+                'platforms' => collect($game['platforms'] ?? [])->pluck('abbreviation')->implode(', '),
             ]);
         })->toArray();
     }
