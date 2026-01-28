@@ -18,6 +18,11 @@ export default defineConfig({
         host: '0.0.0.0',
         port: 5173,
         strictPort: true,
+        // Allow the Laravel app origin (e.g. http://localhost:8000) to load Vite assets.
+        cors: true,
+        headers: {
+            'Access-Control-Allow-Origin': '*',
+        },
         // Bind to 0.0.0.0 for Docker, but make the browser use localhost (0.0.0.0 is not a valid browser host).
         origin: 'http://localhost:5173',
         hmr: {

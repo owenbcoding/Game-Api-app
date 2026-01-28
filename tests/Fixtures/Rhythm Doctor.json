@@ -1,0 +1,69 @@
+[{
+  "id": 12345,
+  "name": "Rhythm Doctor",
+  "slug": "rhythm-doctor",
+  "cover": {
+    "url": "//images.igdb.com/igdb/image/upload/t_thumb/co12345.jpg"
+  },
+  "first_release_date": 1614556800,
+  "platforms": [
+    {
+      "abbreviation": "PC"
+    },
+    {
+      "abbreviation": "NS"
+    }
+  ],
+  "rating": 85.5,
+  "aggregated_rating": 88.2,
+  "summary": "Rhythm Doctor is a rhythm game where you heal patients by defibrillating them in time to the music. Press space on the 7th beat!",
+  "genres": [
+    {
+      "name": "Music"
+    },
+    {
+      "name": "Indie"
+    }
+  ],
+  "involved_companies": [
+    {
+      "company": {
+        "name": "7th Beat Games"
+      }
+    }
+  ],
+  "screenshots": [
+    {
+      "url": "//images.igdb.com/igdb/image/upload/t_thumb/sc1.jpg"
+    },
+    {
+      "url": "//images.igdb.com/igdb/image/upload/t_thumb/sc2.jpg"
+    }
+  ],
+  "storyline": "A rhythm game where you save patients by pressing space on the 7th beat.",
+  "videos": [
+    {
+      "video_id": "dQw4w9WgXcQ"
+    }
+  ],
+  "websites": [
+    {
+      "url": "https://rhythmdr.com",
+      "category": 1
+    }
+  ],
+  "similar_games": [
+    {
+      "name": "A Dance of Fire and Ice",
+      "cover": {
+        "url": "//images.igdb.com/igdb/image/upload/t_thumb/co67890.jpg"
+      },
+      "rating": 82.3,
+      "platforms": [
+        {
+          "abbreviation": "PC"
+        }
+      ]
+    }
+  ]
+}]
