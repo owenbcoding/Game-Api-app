@@ -173,7 +173,8 @@ class GamesController extends Controller
                 ? collect($game['platforms'])->pluck('abbreviation')->implode(', ')
                 : null,
             'memberRating' => array_key_exists('rating', $game) ? round((float) $game['rating']) . '%' : '0%',
-            'criticRating' => array_key_exists('aggregated_rating', $game) ? round((float) $game['aggregated_rating']) . '%' : '0%',
+            // aggregated_rating is often missing in IGDB; treat missing as "N/A"
+            'criticRating' => array_key_exists('aggregated_rating', $game) ? round((float) $game['aggregated_rating']) : null,
             'trailer' => (isset($game['videos']) && is_array($game['videos']) && isset($game['videos'][0]['video_id']))
                 ? 'https://www.youtube.com/watch/' . $game['videos'][0]['video_id']
                 : null,

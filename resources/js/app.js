@@ -15,8 +15,9 @@ function initScoreRings(root = document) {
 
     rings.forEach((ring) => {
         const ratingAttr = ring.getAttribute('data-rating');
-        const rating = Number.parseFloat(ratingAttr ?? '0');
-        const score = Number.isFinite(rating) ? clamp(rating, 0, 100) : 0;
+        const rating = Number.parseFloat(ratingAttr ?? '');
+        const hasScore = Number.isFinite(ratingAttr?.trim?.() ? rating : NaN);
+        const score = hasScore ? clamp(rating, 0, 100) : 0;
         const progress = clamp(score / 100, 0, 1);
 
         const progressCircle = ring.querySelector('[data-score-ring-progress]');
@@ -28,6 +29,16 @@ function initScoreRings(root = document) {
         if (!Number.isFinite(r) || r <= 0) return;
 
         const circumference = 2 * Math.PI * r;
+
+        if (!hasScore) {
+            // Missing score: show N/A and keep the ring empty.
+            textEl.textContent = 'N/A';
+            progressCircle.style.stroke = '#374151'; // gray-700
+            progressCircle.style.strokeDasharray = `${circumference}`;
+            progressCircle.style.strokeDashoffset = `${circumference}`;
+            progressCircle.style.transition = '';
+            return;
+        }
 
         progressCircle.style.stroke = getRingColor(score);
         progressCircle.style.strokeDasharray = `${circumference}`;
@@ -47,7 +58,7 @@ function initScoreRings(root = document) {
         const tick = (now) => {
             const t = clamp((now - start) / durationMs, 0, 1);
             const value = Math.round(endValue * t);
-            textEl.textContent = value === 0 ? '' : String(value);
+            textEl.textContent = String(value);
 
             if (t < 1) requestAnimationFrame(tick);
         };
