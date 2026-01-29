@@ -23,10 +23,40 @@
 
                 <div class="flex flex-wrap items-center mt-5">
                     <div class="flex items-center">
-                        <div class="w-16 h-16 bg-gray-800 rounded-full">
-                            <div class="font-semibold text-xs flex justify-center items-center h-full">
-                                {{ $game['memberRating'] }}
-                            </div>
+                        <div
+                            id="member-rating"
+                            data-score-ring
+                            data-rating="{{ (int) ($game['memberRating'] ?? 0) }}"
+                            class="relative w-16 h-16 bg-gray-800 rounded-full"
+                            aria-label="Member score"
+                        >
+                            <svg class="w-16 h-16" viewBox="0 0 36 36" aria-hidden="true">
+                                <circle
+                                    class="text-gray-700"
+                                    stroke="currentColor"
+                                    stroke-width="3"
+                                    fill="transparent"
+                                    r="16"
+                                    cx="18"
+                                    cy="18"
+                                />
+                                <circle
+                                    data-score-ring-progress
+                                    class="text-blue-500"
+                                    stroke="currentColor"
+                                    stroke-width="3"
+                                    fill="transparent"
+                                    r="16"
+                                    cx="18"
+                                    cy="18"
+                                    stroke-linecap="round"
+                                    transform="rotate(-90 18 18)"
+                                />
+                            </svg>
+                            <div
+                                data-score-ring-text
+                                class="absolute inset-0 font-semibold text-xs flex justify-center items-center"
+                            ></div>
                         </div>
                         <div class="ml-4 text-xs">Member <br> Score</div>
                     </div>
