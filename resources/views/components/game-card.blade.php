@@ -10,14 +10,43 @@
                 <img src="{{ $game['coverImageUrl'] }}" alt="game-cover"
                     class="hover:opacity-75 transition ease-in-out duration-150 w-full">
             </a>
-
-            <div class="absolute bottom-2 right-2 w-16 h-16 bg-gray-800 text-white rounded-full flex items-center justify-center"
-                style="right: -29px; bottom: -29px;">
-                <div class="font-semibold text-xs flex justify-center items-center h-full">
-                    {{ $game['rating'] }}
+            @if ($game['rating'])
+                <div
+                    data-score-ring
+                    data-rating="{{ (int) $game['rating'] }}"
+                    class="absolute bottom-2 right-2 w-16 h-16 bg-gray-800 text-white rounded-full"
+                    style="right: -29px; bottom: -29px;"
+                    aria-label="Game rating"
+                >
+                    <svg class="w-16 h-16" viewBox="0 0 36 36" aria-hidden="true">
+                        <circle
+                            class="text-gray-700"
+                            stroke="currentColor"
+                            stroke-width="3"
+                            fill="transparent"
+                            r="16"
+                            cx="18"
+                            cy="18"
+                        />
+                        <circle
+                            data-score-ring-progress
+                            class="text-blue-500"
+                            stroke="currentColor"
+                            stroke-width="3"
+                            fill="transparent"
+                            r="16"
+                            cx="18"
+                            cy="18"
+                            stroke-linecap="round"
+                            transform="rotate(-90 18 18)"
+                        />
+                    </svg>
+                    <div
+                        data-score-ring-text
+                        class="absolute inset-0 font-semibold text-xs flex justify-center items-center"
+                    ></div>
                 </div>
-            </div>
-
+            @endif
         </div>
         <a href="{{ route('games.show', $game['slug'] ?? '') }}"
             class="block text-base font-semibold leading-tight hover:text-gray-400 mt-4">
