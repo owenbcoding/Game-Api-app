@@ -7,10 +7,41 @@
                             class="hover:opacity-75 transition ease-in-out duration-150 w-20 lg:w-48">
                     </a>
                     
-                        <div class="absolute bottom-2 right-2 w-16 h-16 bg-gray-800 text-white rounded-full flex items-center justify-center"
-                            style="right: -20px; bottom: -20px;">
-                            <div class="font-semibold text-xs flex justify-center items-center h-full">
-                                {{ ($game['rating']) }}
+                        <div
+                            data-score-ring
+                            data-rating="{{ is_null($game['rating'] ?? null) ? '' : (int) $game['rating'] }}"
+                            class="absolute bottom-2 right-2 w-16 h-16 bg-gray-800 text-white rounded-full"
+                            style="right: -20px; bottom: -20px;"
+                            aria-label="Game rating"
+                        >
+                            <svg class="w-16 h-16" viewBox="0 0 36 36" aria-hidden="true">
+                            <circle
+                                    class="text-gray-700"
+                                    stroke="currentColor"
+                                    stroke-width="3"
+                                    fill="transparent"
+                                    r="16"
+                                    cx="18"
+                                    cy="18"
+                                />
+                                <circle
+                                    data-score-ring-progress
+                                    class="text-blue-500"
+                                    stroke="currentColor"
+                                    stroke-width="3"
+                                    fill="transparent"
+                                    r="16"
+                                    cx="18"
+                                    cy="18"
+                                    stroke-linecap="round"
+                                    transform="rotate(-90 18 18)"
+                                />
+                            </svg>
+                            <div
+                                data-score-ring-text
+                                class="absolute inset-0 font-semibold text-xs flex justify-center items-center"
+                            >
+                                {{ is_null($game['rating'] ?? null) ? 'N/A' : (int) $game['rating'] }}
                             </div>
                         </div>
                 </div>

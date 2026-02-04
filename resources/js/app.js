@@ -15,6 +15,10 @@ function initScoreRings(root = document) {
 
     rings.forEach((ring) => {
         const ratingAttr = ring.getAttribute('data-rating');
+        const lastRatingAttr = ring.getAttribute('data-score-ring-last-rating');
+        if (lastRatingAttr === ratingAttr) return;
+        ring.setAttribute('data-score-ring-last-rating', ratingAttr ?? '');
+
         const rating = Number.parseFloat(ratingAttr ?? '');
         const hasScore = Number.isFinite(ratingAttr?.trim?.() ? rating : NaN);
         const score = hasScore ? clamp(rating, 0, 100) : 0;
@@ -69,5 +73,34 @@ function initScoreRings(root = document) {
 
 document.addEventListener('DOMContentLoaded', () => initScoreRings());
 document.addEventListener('livewire:navigated', () => initScoreRings());
+
+// Livewire wire:init (and similar) swaps DOM without triggering navigated.
+// Observe DOM additions and initialize any newly-inserted rings.
+if (typeof MutationObserver !== 'undefined') {
+    let scheduled = false;
+    let pendingRoots = new Set();
+
+    const flush = () => {
+        scheduled = false;
+        const roots = Array.from(pendingRoots);
+        pendingRoots = new Set();
+        roots.forEach((root) => initScoreRings(root));
+    };
+
+    const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+            mutation.addedNodes.forEach((node) => {
+                if (node.nodeType === Node.ELEMENT_NODE) pendingRoots.add(node);
+            });
+        });
+
+        if (!scheduled && pendingRoots.size > 0) {
+            scheduled = true;
+            requestAnimationFrame(flush);
+        }
+    });
+
+    observer.observe(document.documentElement, { childList: true, subtree: true });
+}
 
 
