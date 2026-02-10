@@ -24,6 +24,9 @@ class PopularGames extends Component
         $after = Carbon::now()->addMonths(2)->timestamp;
 
         $popularGamesUnformatted = Cache::remember('popular-games', 7, function () use ($before, $after) {
+            if (empty(config('services.igdb.client_id')) || empty(config('services.igdb.client_secret'))) {
+                return [];
+            }
             // Step 1: Get the access token
             $response = Http::post('https://id.twitch.tv/oauth2/token', [
                 'client_id' => config('services.igdb.client_id'),

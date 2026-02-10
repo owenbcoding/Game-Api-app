@@ -25,7 +25,9 @@ class MostAnticipated extends Component
         $afterFourMonths = Carbon::now()->addMonths(4)->timestamp;
 
         $this->mostAnticipated = Cache::remember('most-anticipated', 7, function () use ($before, $afterFourMonths) {
-
+            if (empty(config('services.igdb.client_id')) || empty(config('services.igdb.client_secret'))) {
+                return [];
+            }
             $response = Http::post('https://id.twitch.tv/oauth2/token', [
                 'client_id' => config('services.igdb.client_id'),
                 'client_secret' => config('services.igdb.client_secret'),
