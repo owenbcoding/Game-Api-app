@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# Standalone sail launcher: finds vendor/bin/sail in current or parent dirs and runs it.
+# Install so "sail" is on PATH:
+#   mkdir -p ~/bin && cp bin/sail ~/bin/sail && chmod +x ~/bin/sail
+#   echo 'export PATH="$HOME/bin:$PATH"' >> ~/.bashrc && source ~/.bashrc
+
+dir="${PWD}"
+while [[ -n "$dir" ]]; do
+  if [[ -x "$dir/vendor/bin/sail" ]]; then
+    exec "$dir/vendor/bin/sail" "$@"
+  fi
+  [[ "$dir" == "${dir%/*}" ]] && break
+  dir="${dir%/*}"
+done
+echo "Sail not found. Run this from a Laravel Sail project directory." >&2
+exit 1

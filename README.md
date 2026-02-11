@@ -67,18 +67,23 @@ You can run Sail as `./sail` from the project directory, or set up a `sail` comm
 ./sail artisan migrate
 ```
 
-**Option 2 – Use `sail` without `./`** (one-time setup): add this to your `~/.bashrc` (or `~/.zshrc`):
+**Option 2 – Use `sail` without `./`** (one-time setup). First remove any broken alias:
 ```bash
-# Laravel Sail: run "sail" from anywhere inside a Sail project
-source ~/Projects/Laracast/Game-Api-app/sail.sh
+unalias sail 2>/dev/null
 ```
-Then run `source ~/.bashrc` (or `source ~/.zshrc`). After that you can use:
+Then install the launcher so `sail` is on your PATH (run from this project directory):
+```bash
+mkdir -p ~/bin && cp bin/sail ~/bin/sail && chmod +x ~/bin/sail
+grep -q 'export PATH="$HOME/bin:$PATH"' ~/.bashrc || echo 'export PATH="$HOME/bin:$PATH"' >> ~/.bashrc
+source ~/.bashrc
+```
+(Use `~/.zshrc` instead of `~/.bashrc` if you use zsh.) After that you can use:
 ```bash
 sail up -d
 sail pnpm dev
 sail artisan migrate
 ```
-The function finds the project by looking for `vendor/bin/sail` in the current or parent directories, so it works from any subdirectory of the project.
+The launcher finds the project by looking for `vendor/bin/sail` in the current or parent directories, so it works from any subdirectory. Works for any Laravel Sail project.
 
 If you prefer Docker, ensure Docker Desktop has WSL2 integration enabled.
 
