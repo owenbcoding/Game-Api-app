@@ -1,7 +1,8 @@
 <div>
-    <div class="relative">
+    <div class="relative" x-data="{ isVisible: true}" @click.away="isVisible = false">
         <input wire:model.live.debounce.300ms="search"
-            type="text" class="bg-gray-800 text-sm rounded-full pl-10 pr-3 py-1 w-64" placeholder="Search . . .">
+            type="text" class="bg-gray-800 text-sm rounded-full pl-10 pr-3 py-1 w-64" placeholder="Search . . ."
+            @focus="isVisible = true">
 
         <!-- Search Icon -->
         <div class="absolute top-0 flex items-center h-full ml-2">
@@ -16,7 +17,7 @@
             </svg>
         </div>
         @if (strlen($search) >= 2)
-            <div class="absolute z-50 bg-gray-800 text-xs rounded w-64 mt-1">
+            <div class="absolute z-50 bg-gray-800 text-xs rounded w-64 mt-1" x-show="isVisible">
                 <ul>
                     @forelse ($searchResults as $game)
                         <li class="border-b border-gray-700 last:border-b-0">
