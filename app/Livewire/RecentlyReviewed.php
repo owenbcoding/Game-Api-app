@@ -10,6 +10,7 @@ use Illuminate\Support\Str;
 
 class RecentlyReviewed extends Component
 {
+    public $limit = 3;
 
     public $recentlyReviewed = [];
 
@@ -22,8 +23,9 @@ class RecentlyReviewed extends Component
     {
         $before = Carbon::now()->subMonths(2)->timestamp;
         $current = Carbon::now()->timestamp;
-        
-        $this->recentlyReviewed = Cache::remember('recently-reviewed', 7, function () use ($before, $current) {
+        $limit = (int) $this->limit ?: 3;
+
+        $this->recentlyReviewed = Cache::remember('recently-reviewed-' . $limit, 7, function () use ($before, $current, $limit) {
             if (empty(config('services.igdb.client_id')) || empty(config('services.igdb.client_secret'))) {
                 return [];
             }
@@ -40,13 +42,13 @@ class RecentlyReviewed extends Component
                 'Authorization' => 'Bearer ' . $accessToken,
             ])
             ->withBody(
-                    "fields name, cover.url, first_release_date, platforms.abbreviation, rating, rating_count, summary;
+                    "fields name, slug, cover.url, first_release_date, platforms.abbreviation, rating, rating_count, summary;
                     where platforms = (48,49,130,6)
                     & first_release_date > {$before}
                     & first_release_date < {$current}
                     & rating_count > 5;
                     sort popularity desc;
-                    limit 3;",
+                    limit {$limit};",
                     'text/plain'
                 )
                 ->post('https://api.igdb.com/v4/games')
@@ -63,7 +65,7 @@ class RecentlyReviewed extends Component
         return view('livewire.recently-reviewed');
     }
 
-    public function formatforview($games) 
+    public function formatForView($games) 
     { 
         return collect($games)->map(function ($game) {
             return collect($game)->merge([

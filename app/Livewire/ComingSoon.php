@@ -10,6 +10,8 @@ use Illuminate\Support\Str;
 
 class ComingSoon extends Component
 {
+    public $limit = 4;
+
     public $comingSoon = [];
 
     public function mount()
@@ -18,10 +20,11 @@ class ComingSoon extends Component
     }
 
     public function loadComingSoon()
-    { 
+    {
         $current = Carbon::now()->timestamp;
+        $limit = (int) $this->limit ?: 4;
 
-        $this->comingSoon = Cache::remember('most-anticipated', 7, function () use ($current) {
+        $this->comingSoon = Cache::remember('coming-soon-' . $limit, 7, function () use ($current, $limit) {
             if (empty(config('services.igdb.client_id')) || empty(config('services.igdb.client_secret'))) {
                 return [];
             }
@@ -37,11 +40,11 @@ class ComingSoon extends Component
                 'Client-ID' => config('services.igdb.client_id'),
                 'Authorization' => 'Bearer ' . $accessToken,
             ])->withBody(
-                "fields name, cover.url, first_release_date, platforms.abbreviation, rating, summary;
+                "fields name, slug, cover.url, first_release_date, platforms.abbreviation, rating, summary;
                 where platforms = (48,49,130,6)
                 & first_release_date > {$current};
                 sort first_release_date asc;
-                limit 4;",
+                limit {$limit};",
                 'text/plain'
             )
             ->post('https://api.igdb.com/v4/games')

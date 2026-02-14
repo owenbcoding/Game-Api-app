@@ -1,7 +1,7 @@
 <div>
     <div class="relative" x-data="{ isVisible: true}" @click.away="isVisible = false">
         <input wire:model.live.debounce.300ms="search"
-            type="text" class="bg-gray-800 text-sm rounded-full pl-10 pr-3 py-1 w-64" placeholder="Searc (press '/' to focus)"
+            type="text" class="bg-gray-800 text-sm rounded-full pl-10 pr-3 py-1 w-64" placeholder="Search (press '/' to focus)"
             x-ref="search"
             @keydown.window="if (event.key === '/') { $refs.search.focus(); }"
             @focus="isVisible = true"

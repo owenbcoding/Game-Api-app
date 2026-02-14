@@ -108,6 +108,21 @@ class GamesController extends Controller
         ]);
     }
 
+    public function gamesIndex()
+    {
+        return view('games');
+    }
+
+    public function reviewsIndex()
+    {
+        return view('reviews');
+    }
+
+    public function comingSoonIndex()
+    {
+        return view('coming-soon');
+    }
+
     /**
      * Show the form for creating a new resource.
      */
@@ -142,16 +157,16 @@ class GamesController extends Controller
             'Authorization' => 'Bearer ' . $accessToken,
         ])
             ->withBody(
-            "fields name, slug, cover.url, first_release_date, platforms.abbreviation, rating, aggregated_rating, summary, genres.name, involved_companies.company.name, screenshots.url, storyline, videos.video_id, websites.url, websites.category, similar_games.name, similar_games.cover.url, similar_games.rating, similar_games.platforms.abbreviation;
+            "fields name, slug, cover.url, first_release_date, platforms.abbreviation, rating, aggregated_rating, summary, genres.name, involved_companies.company.name, screenshots.url, storyline, videos.video_id, websites.url, websites.category, similar_games.name, similar_games.slug, similar_games.cover.url, similar_games.rating, similar_games.platforms.abbreviation;
             where slug = \"{$slug}\";",
                 'text/plain'
             )
             ->post('https://api.igdb.com/v4/games')
             ->json();
 
-        // dd($game);
-
-        // abort_if(!$game, 404);
+        if (empty($game)) {
+            abort(404);
+        }
 
         $formattedGame = $this->formatGameForView($game[0]);
 
@@ -168,7 +183,7 @@ class GamesController extends Controller
         $temp = collect($game)->merge([
             'coverImageUrl' => Str::replaceFirst('thumb', 'cover_big', $game['cover']['url']),
             'genres' => collect($game['genres'])->pluck('name')->implode(', '),
-            'involvedCompanies' => $game['involved_companies.0.company.name'] ?? null,
+            'involvedCompanies' => data_get($game, 'involved_companies.0.company.name'),
             'platforms' => array_key_exists('platforms', $game)
                 ? collect($game['platforms'])->pluck('abbreviation')->implode(', ')
                 : null,
@@ -186,11 +201,12 @@ class GamesController extends Controller
                     ];
                 })->take(6)->values()->toArray()
                 : [],
-            'similarGames' => collect($game['similar_games'])->map(function ($game) {
-                return collect($game)->merge([
-                    'coverImageUrl' => array_key_exists('cover', $game) ? Str::replaceFirst('thumb', 'cover_big', $game['cover']['url']) : 'https://via.placeholder.com/264x352',
-                    'rating' => isset($game['rating']) ? round((float) $game['rating']) . '%' : null,
-                    'platforms' => array_key_exists('platforms', $game) ? collect($game['platforms'])->pluck('abbreviation')->implode(', ') : null
+            'similarGames' => collect($game['similar_games'] ?? [])->map(function ($similarGame) {
+                return collect($similarGame)->merge([
+                    'coverImageUrl' => array_key_exists('cover', $similarGame) ? Str::replaceFirst('thumb', 'cover_big', $similarGame['cover']['url']) : 'https://via.placeholder.com/264x352',
+                    'rating' => isset($similarGame['rating']) ? round((float) $similarGame['rating']) . '%' : null,
+                    'platforms' => array_key_exists('platforms', $similarGame) ? collect($similarGame['platforms'])->pluck('abbreviation')->implode(', ') : null,
+                    'slug' => $similarGame['slug'] ?? null,
                 ]);
             })->take(6),
             'social' => [

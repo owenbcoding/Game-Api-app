@@ -19,9 +19,9 @@
                     <p class="font-bold text-2xl">Game-App</p>
                 </a>
                 <ul class="flex lg:ml-16 space-x-8 mt-6 lg:mt-0">
-                    <li><a href="/games" class="hover:text-gray-400">Games</a></li>
-                    <li><a href="/reviews" class="hover:text-gray-400">Reviews</a></li>
-                    <li><a href="/coming-soon" class="hover:text-gray-400">Coming Soon</a></li>
+                    <li><a href="{{ route('games.index') }}" class="hover:text-gray-400">Games</a></li>
+                    <li><a href="{{ route('reviews.index') }}" class="hover:text-gray-400">Reviews</a></li>
+                    <li><a href="{{ route('coming-soon.index') }}" class="hover:text-gray-400">Coming Soon</a></li>
                 </ul>
             </div>
         
@@ -29,9 +29,15 @@
             <div class="flex items-center space-x-4 mt-6 lg:mt-0">
                 <livewire:search-dropdown />
                 
-                <a href="#">
-                    <img class="w-10 h-10 rounded-full" src="https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y" alt="avatar">
-                </a>
+                @auth
+                    <a href="{{ route('dashboard') }}">
+                        <img class="w-10 h-10 rounded-full" src="https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y" alt="avatar">
+                    </a>
+                @else
+                    <a href="#">
+                        <img class="w-10 h-10 rounded-full" src="https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y" alt="avatar">
+                    </a>
+                @endauth
             </div>
         </nav>
     </header>
