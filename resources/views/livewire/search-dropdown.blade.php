@@ -1,8 +1,15 @@
 <div>
     <div class="relative" x-data="{ isVisible: true}" @click.away="isVisible = false">
         <input wire:model.live.debounce.300ms="search"
-            type="text" class="bg-gray-800 text-sm rounded-full pl-10 pr-3 py-1 w-64" placeholder="Search . . ."
-            @focus="isVisible = true">
+            type="text" class="bg-gray-800 text-sm rounded-full pl-10 pr-3 py-1 w-64" placeholder="Searc (press '/' to focus)"
+            x-ref="search"
+            @keydown.window="if (event.key === '/') { $refs.search.focus(); }"
+            @focus="isVisible = true"
+            @keydown.escape.window="isVisible = false"
+            @keydown="isVisible = true"
+            @keydown.shift.tab="isVisible = false"
+            @keydown.tab="isVisible = false"
+            >
 
         <!-- Search Icon -->
         <div class="absolute top-0 flex items-center h-full ml-2">
@@ -17,11 +24,13 @@
             </svg>
         </div>
         @if (strlen($search) >= 2)
-            <div class="absolute z-50 bg-gray-800 text-xs rounded w-64 mt-1" x-show="isVisible">
+            <div class="absolute z-50 bg-gray-800 text-xs rounded w-64 mt-1" x-show.transition="isVisible">
                 <ul>
                     @forelse ($searchResults as $game)
                         <li class="border-b border-gray-700 last:border-b-0">
-                            <a href="{{ route('games.show', $game['slug'] ?? '') }}" class="block hover:bg-gray-700 flex items-center transition duration-150 ease-in-out px-3 py-3">
+                            <a href="{{ route('games.show', $game['slug'] ?? '') }}" class="block hover:bg-gray-700 flex items-center transition duration-150 ease-in-out px-3 py-3"
+                            @if ($loop->last) @keydown.tab="isVisible = false" @endif
+                            >
                             @if (isset($game['coverImageUrl']))
                                 <img src="{{ $game['coverImageUrl'] }}" alt="cover" class="w-8 h-8 rounded object-cover">
                             @else
