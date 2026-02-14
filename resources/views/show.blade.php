@@ -160,13 +160,48 @@
                 <p class="mt-4">
                     {{ Str::limit($game['summary'] ?? 'No summary available.', 250) }}
                 </p>
-                <div class="mt-8">
+                <div class="mt-8" x-data="{ trailerOpen: false }">
                     @if (!empty($game['videos']) && is_array($game['videos']))
-                    <a href="{{ $game['trailer'] }}"
+                    <button type="button"
+                        @click="trailerOpen = true"
                         class="button inline-flex bg-blue-500 text-white font-semibold px-4 py-4 hover:bg-blue-600 rounded transition ease-in-out duration-150">
-                        <!-- …Play Trailer SVG… -->
                         <span class="ml-2">Play Trailer</span>
-                    </a>
+                    </button>
+
+                    <!-- Trailer modal overlay -->
+                    <div x-show="trailerOpen"
+                        x-cloak
+                        class="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto"
+                        style="background-color: rgba(0, 0, 0, .5);"
+                        x-transition:enter="ease-out duration-200"
+                        x-transition:enter-start="opacity-0"
+                        x-transition:enter-end="opacity-100"
+                        x-transition:leave="ease-in duration-150"
+                        x-transition:leave-start="opacity-100"
+                        x-transition:leave-end="opacity-0">
+                        <div class="container mx-auto lg:px-32 rounded-lg overflow-y-auto max-h-[90vh]"
+                            @click.away="trailerOpen = false">
+                            <div class="bg-gray-900 rounded shadow-lg">
+                                <div class="flex justify-end pr-4 pt-2">
+                                    <button type="button"
+                                        @click="trailerOpen = false"
+                                        class="text-3xl leading-none hover:text-gray-300 text-white"
+                                        aria-label="Close">&times;</button>
+                                </div>
+                                <div class="modal-body px-8 pb-8">
+                                    <div class="responsive-container overflow-hidden relative" style="padding-top: 56.25%;">
+                                        <iframe
+                                            src="https://www.youtube.com/embed/{{ $game['videos'][0]['video_id'] }}"
+                                            class="responsive-iframe absolute top-0 left-0 w-full h-full"
+                                            style="border: 0;"
+                                            allow="autoplay; encrypted-media"
+                                            allowfullscreen
+                                            title="Game trailer"></iframe>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     @else
                     <p class="text-gray-400">No trailer available.</p>
                     @endif
