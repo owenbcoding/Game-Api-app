@@ -1,5 +1,32 @@
 # Deployment
 
+## 505 / 502 with no errors in logs
+
+If you see a **505** or **502** and nothing appears in Laravel Cloud logs, the request is often failing before Laravel runs (PHP crash, OOM, or proxy). Try:
+
+1. **Health check** – Open `https://your-app-url/up` in the browser. If this returns `OK`, the app boots and the problem is likely on a specific route (e.g. homepage); if this also fails, the app or PHP is crashing before any route runs.
+2. **Env** – In Laravel Cloud → Environment, confirm `APP_KEY` is set (run `php artisan key:generate --show` locally and paste the value). Missing `APP_KEY` can cause early failures.
+3. **Stack traces** – This repo has `includeStacktraces` enabled for the `stderr` log channel so Laravel Cloud can show full exception traces. Redeploy and trigger the error again, then check the logs.
+4. **Resources** – If the instance is small (e.g. 256MB RAM), try a larger size; 502/505 can be from the app being killed (OOM) before it can log.
+
+## /up works but no application is displaying (blank page)
+
+If the health check (`/up`) says the app is up but the rest of the site is blank or doesn’t load, **the most common cause is a missing `APP_KEY`**.
+
+Laravel needs `APP_KEY` for sessions, cookies, CSRF, and encryption. Without it, pages can fail silently or show nothing.
+
+**Fix:**
+
+1. **Get your key** – Locally in the project run:
+   ```bash
+   php artisan key:generate --show
+   ```
+   Copy the full line (e.g. `base64:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx=`).
+
+2. **Set it on Laravel Cloud** – In the Laravel Cloud dashboard: your project → **Environment** (or **General** / deploy settings) → add or edit **`APP_KEY`** and paste that value.
+
+3. **Redeploy** – Save the environment, then trigger a new deploy (Laravel Cloud usually needs a redeploy for env changes to apply). After that, the site should load.
+
 ## Required environment variables
 
 In your host’s **deploy / environment** settings, set at least:
